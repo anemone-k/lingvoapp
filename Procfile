@@ -1,1 +1,1 @@
-web: gunicorn lingvoapp.wsgi --log-file -
+web: gunicorn lingvo.wsgi --log-file -
