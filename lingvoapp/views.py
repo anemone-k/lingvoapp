@@ -61,7 +61,7 @@ def material_detail(request, pk):
         return JsonResponse({'message': 'Tutorial was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET','DELETE'])
 def dict_list(request):
     if request.method == 'GET':
         dicts = Dictionary.objects.all()
@@ -114,7 +114,7 @@ def dict_one_word_save(request):
         return JsonResponse(dict_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['DELETE'])
 def dict_delete(request, pk):
     # find tutorial by pk (id)
     try:
