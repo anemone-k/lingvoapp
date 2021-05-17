@@ -132,4 +132,6 @@ dmypy.json
 *.bak
 
 #Database
-*.sqlite3
+__pychache__/
+*.pyc
+db.sqlite3

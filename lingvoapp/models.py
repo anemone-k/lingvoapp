@@ -11,7 +11,7 @@ class Material(models.Model):
 
 class Dictionary(models.Model):
     word = models.CharField(max_length=200, blank=False, default='',unique=True)
-    lemma = models.CharField(max_length=200,default='')
+
     translation = models.CharField(max_length=200, blank=False, default='')
     state = models.IntegerField(default=0)
     edited = models.DateTimeField(auto_now=True)
@@ -19,7 +19,7 @@ class Dictionary(models.Model):
 
 class DictionaryInverted(models.Model):
     word = models.CharField(max_length=200, blank=False, default='',unique=True)
-    lemma = models.CharField(max_length=200, default='')
+
     translation = models.CharField(max_length=200, blank=False, default='')
     state = models.IntegerField(default=0)
     edited = models.DateTimeField(auto_now=True)
