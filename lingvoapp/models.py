@@ -10,17 +10,17 @@ class Material(models.Model):
 
 
 class Dictionary(models.Model):
-    word = models.CharField(max_length=200, blank=False, default='',unique=True)
+    word = models.TextField( blank=False, default='',unique=True)
 
-    translation = models.CharField(max_length=200, blank=False, default='')
+    translation = models.TextField( blank=False, default='')
     state = models.IntegerField(default=0)
     edited = models.DateTimeField(auto_now=True)
 
 
 class DictionaryInverted(models.Model):
-    word = models.CharField(max_length=200, blank=False, default='',unique=True)
+    word = models.TextField(blank=False, default='',unique=True)
 
-    translation = models.CharField(max_length=200, blank=False, default='')
+    translation = models.TextField(blank=False, default='')
     state = models.IntegerField(default=0)
     edited = models.DateTimeField(auto_now=True)
 
