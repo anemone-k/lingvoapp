@@ -145,7 +145,7 @@ class TranslationWord(APIView):
 
     def get(self, request, format=None, **kwargs):
         dict0=Dictionary.objects.all()
-        if (dict0.count()>=10):
+        if (dict0.count()>=20):
             dict0= Dictionary.objects.filter(state=0)
             c=dict0.count()
             startdate = date.today()
@@ -224,7 +224,7 @@ class WordTranslation(APIView):
 
     def get(self, request, format=None, **kwargs):
         dict0=DictionaryInverted.objects.all()
-        if (dict0.count()>=10):
+        if (dict0.count()>=20):
             dict0= DictionaryInverted.objects.filter(state=0)
             c=dict0.count()
             startdate = date.today()
