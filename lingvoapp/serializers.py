@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Material,Dictionary,DictionaryInverted
+from .models import Material,Dictionary,DictionaryInverted,Question, AnswerOptions
 
 
 class MaterialSerializer(serializers.ModelSerializer):
@@ -37,3 +37,26 @@ class DictionaryInvertedSerializer(serializers.ModelSerializer):
                   'translation',
                   'state',
                   'edited')
+
+
+class AnswerOptionsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = AnswerOptions
+        fields = [
+            'answerText',
+            'isCorrect',
+            'wordId'
+        ]
+
+class RandomQuestionSerializer(serializers.ModelSerializer):
+
+    answer = AnswerOptionsSerializer(many=True, read_only=True)
+
+    class Meta:
+
+        model = Question
+        fields = [
+            'questionText','answer'
+        ]
