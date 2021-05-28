@@ -171,7 +171,7 @@ class TranslationWord(APIView):
             for i in range(n):
                 Dictionary.objects.create(word=wordList[i],translation=translationList[i])
                 DictionaryInverted.objects.create(word=wordList[i],translation=translationList[i])
-        dict0 = Dictionary.objects.all()
+        dict0 = Dictionary.objects.all().order_by('?')[:10]
         for d in dict0:
             question = Question(questionText=d.translation)
             question.save()
@@ -250,7 +250,7 @@ class WordTranslation(APIView):
             for i in range(n):
                 Dictionary.objects.create(word=wordList[i],translation=translationList[i])
                 DictionaryInverted.objects.create(word=wordList[i],translation=translationList[i])
-        dict0 = DictionaryInverted.objects.all()
+        dict0 = DictionaryInverted.objects.all().order_by('?')[:10]
         for d in dict0:
             question = Question(questionText=d.word)
             question.save()
