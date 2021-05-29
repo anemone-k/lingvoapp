@@ -9,7 +9,8 @@ class MaterialSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'name',
                   'created',
-                  'text')
+                  'text',
+                  'youtubeUrl')
 
 class MaterialSerializerList(serializers.ModelSerializer):
     class Meta:
