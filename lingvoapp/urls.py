@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^api/dict_i_inverted/(?P<pk>[0-9]+)$', views.dict_increment_inverted),
     url(r'^api/dict_d_inverted/(?P<pk>[0-9]+)$', views.dict_decrement_inverted),
     url(r'^api/questions_inverted$',WordTranslation.as_view()),
+    url(r'^api/search$', views.search),
 ]

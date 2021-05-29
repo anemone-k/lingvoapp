@@ -3,7 +3,7 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 from rest_framework.response import Response
-
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from .models import Material,Dictionary,DictionaryInverted,AnswerOptions,Question
 from .serializers import MaterialSerializer, MaterialSerializerList,DictionarySerializer,DictionaryInvertedSerializer,AnswerOptionsSerializer,RandomQuestionSerializer
 from rest_framework.decorators import api_view
@@ -298,3 +298,24 @@ def dict_decrement_inverted(request, pk):
         dictionary_serializer = DictionaryInvertedSerializer(dict)
         return JsonResponse(dictionary_serializer.data)
 
+
+
+@api_view(['GET'])
+def search(request):
+    if request.method == 'GET':
+        dat = JSONParser().parse(request)
+        q=dat['word']
+    #    print(data['word'])
+        vector = SearchVector('name')
+        vector_trgm =  TrigramSimilarity('name',q)
+        materials = Material.objects.annotate(search=vector).filter(search=q)
+        materials2=Material.objects.annotate(similarity=vector_trgm).filter(similarity__gt=0.2)
+        materials=materials|materials2
+    #    materials=Material.objects.filter(name__search=dat['word'])
+        material_serializer = MaterialSerializerList(materials, many=True)
+        return JsonResponse(material_serializer.data, safe=False)
+
+#git add -A
+#git commit -m 'Update ALLOWED_HOSTS with site and development server URL'
+#git push origin main
+#git push heroku main
