@@ -11,8 +11,8 @@ class Material(models.Model):
         ordering = ['id']
     name = models.CharField(max_length=70, blank=False, default='')
     created = models.DateTimeField(auto_now_add=True)
-    text = models.TextField(blank=False,default='')
-
+    text = models.TextField(blank=False, default='')
+    youtubeUrl=models.TextField(blank=True, default='')
 
 
 class Dictionary(models.Model):
