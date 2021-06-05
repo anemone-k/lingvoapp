@@ -1,3 +1,4 @@
+import random
 from datetime import date, timedelta
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
@@ -175,14 +176,18 @@ class TranslationWord(APIView):
         for d in dict0:
             question = Question(questionText=d.translation)
             question.save()
-            rightAnswer= AnswerOptions(question=question,answerText=d.word, wordId=d.pk, isCorrect=True)
-            rightAnswer.save()
-            for i in range(3):
-                d1= Dictionary.objects.all().order_by('?').first()
-                while(d1.id==rightAnswer.wordId):
-                    d1 = Dictionary.objects.all().order_by('?').first()
-                wrongAnswer = AnswerOptions(question=question, answerText=d1.word, wordId=d1.pk, isCorrect=False)
-                wrongAnswer.save()
+
+            r=random.randint(0,3)
+            for i in range(4):
+                if(r==i):
+                    rightAnswer = AnswerOptions(question=question, answerText=d.word, wordId=d.pk, isCorrect=True)
+                    rightAnswer.save()
+                else:
+                    d1= Dictionary.objects.all().order_by('?').first()
+                    while(d1.id==d.id):
+                        d1 = Dictionary.objects.all().order_by('?').first()
+                    wrongAnswer = AnswerOptions(question=question, answerText=d1.word, wordId=d1.pk, isCorrect=False)
+                    wrongAnswer.save()
 
         question = Question.objects.all()
         serializer = RandomQuestionSerializer(question, many=True)
@@ -226,14 +231,17 @@ class WordTranslation(APIView):
         for d in dict0:
             question = Question(questionText=d.word)
             question.save()
-            rightAnswer= AnswerOptions(question=question,answerText=d.translation, wordId=d.pk, isCorrect=True)
-            rightAnswer.save()
-            for i in range(3):
-                d1= DictionaryInverted.objects.all().order_by('?').first()
-                while(d1.id==rightAnswer.wordId):
+            r = random.randint(0, 3)
+            for i in range(4):
+                if (r == i):
+                    rightAnswer = AnswerOptions(question=question, answerText=d.word, wordId=d.pk, isCorrect=True)
+                    rightAnswer.save()
+                else:
                     d1 = DictionaryInverted.objects.all().order_by('?').first()
-                wrongAnswer = AnswerOptions(question=question, answerText=d1.translation, wordId=d1.pk, isCorrect=False)
-                wrongAnswer.save()
+                    while (d1.id == d.id):
+                        d1 = DictionaryInverted.objects.all().order_by('?').first()
+                    wrongAnswer = AnswerOptions(question=question, answerText=d1.word, wordId=d1.pk, isCorrect=False)
+                    wrongAnswer.save()
 
         question = Question.objects.all()
         serializer = RandomQuestionSerializer(question, many=True)
@@ -285,7 +293,7 @@ def change_inverted(request):
     if request.method == 'POST':
         words = JSONParser().parse(request)
         for word in words:
-            pk=word[0]
+            pk=int(word[0])
             s=words.get(word[0])
             dict = DictionaryInverted.objects.get(pk=pk)
 
