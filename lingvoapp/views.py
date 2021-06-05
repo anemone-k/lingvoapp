@@ -261,12 +261,15 @@ def search(request):
             vector = SearchVector('name')
             vector_trgm =  TrigramSimilarity('name',q)
             materials = Material.objects.annotate(search=vector).filter(search=q)
-            materials2=Material.objects.annotate(similarity=vector_trgm).filter(similarity__gt=0.2)
+            try:
+                materials2=Material.objects.annotate(similarity=vector_trgm).filter(similarity__gt=0.2)
+            except:
+                materials2=None
             materials=materials|materials2
             if (materials!=None):
                 material_serializer = MaterialSerializerList(materials, many=True)
             else:
-                material_serializer = MaterialSerializerList([], many=True)
+                material_serializer = MaterialSerializerList([])
 
 
         else:
