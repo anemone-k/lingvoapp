@@ -21,11 +21,18 @@ def material_list(request):
     if request.method == 'GET':
         materials = Material.objects.all()
 
-        name = request.GET.get('name', None)
-        if name is not None:
-            materials = materials.filter(name__icontains=name)
+        q = request.GET.get('word')
+        if (q != None):
+            vector = SearchVector('name')
+            vector_trgm = TrigramSimilarity('name', q)
+            materials = Material.objects.annotate(search=vector).filter(search=q)
 
-        materials_serializer = MaterialSerializerList(materials, many=True)
+            if (materials != None):
+                materials_serializer = MaterialSerializerList(materials, many=True)
+            else:
+                materials_serializer = MaterialSerializerList([])
+        else:
+            materials_serializer = MaterialSerializerList(materials, many=True)
         return JsonResponse(materials_serializer.data, safe=False)
     elif request.method == 'POST':
         material_data = JSONParser().parse(request)
