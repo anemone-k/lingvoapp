@@ -263,6 +263,7 @@ def search(request):
         materials = Material.objects.annotate(search=vector).filter(search=q)
         materials2=Material.objects.annotate(similarity=vector_trgm).filter(similarity__gt=0.2)
         materials=materials|materials2
+        print(materials)
     #    materials=Material.objects.filter(name__search=dat['word'])
         material_serializer = MaterialSerializerList(materials, many=True)
         return JsonResponse(material_serializer.data, safe=False)
