@@ -248,9 +248,8 @@ class WordTranslation(APIView):
 @api_view(['GET'])
 def search(request):
     if request.method == 'GET':
-        dat = JSONParser().parse(request)
-        q=dat['word']
-    #    print(data['word'])
+        q=request.GET.get('word')
+        print(q)
         vector = SearchVector('name')
         vector_trgm =  TrigramSimilarity('name',q)
         materials = Material.objects.annotate(search=vector).filter(search=q)
@@ -307,6 +306,7 @@ def change_inverted(request):
 #git commit -m 'Update ALLOWED_HOSTS with site and development server URL'
 #git push origin main
 #git push heroku main
+#heroku run python manage.py migrate
 
 
 
