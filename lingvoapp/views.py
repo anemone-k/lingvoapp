@@ -190,34 +190,6 @@ class TranslationWord(APIView):
         Question.objects.all().delete()
         return Response(a)
 
-# изменение статуса слова Dictionary
-@api_view(['GET'])
-def dict_increment(request, pk):
-    try:
-        dict = Dictionary.objects.get(pk=pk)
-    except Dictionary.DoesNotExist:
-        return JsonResponse({'message': 'The word does not exist'}, status=status.HTTP_404_NOT_FOUND)
-    if (dict.state<2):
-            dict.state+=1
-    dict.save()
-    if request.method == 'GET':
-        dictionary_serializer = DictionarySerializer(dict)
-        return JsonResponse(dictionary_serializer.data)
-
-
-@api_view(['GET'])
-def dict_decrement(request, pk):
-    try:
-        dict = Dictionary.objects.get(pk=pk)
-    except Dictionary.DoesNotExist:
-        return JsonResponse({'message': 'The word does not exist'}, status=status.HTTP_404_NOT_FOUND)
-    if (dict.state > 0):
-        dict.state -= 1
-    dict.save()
-    if request.method == 'GET':
-        dictionary_serializer = DictionarySerializer(dict)
-        return JsonResponse(dictionary_serializer.data)
-
 
 # слово-перевод: формирование теста
 class WordTranslation(APIView):
@@ -270,7 +242,84 @@ class WordTranslation(APIView):
         return Response(a)
 
 
+
+
+
+@api_view(['GET'])
+def search(request):
+    if request.method == 'GET':
+        dat = JSONParser().parse(request)
+        q=dat['word']
+    #    print(data['word'])
+        vector = SearchVector('name')
+        vector_trgm =  TrigramSimilarity('name',q)
+        materials = Material.objects.annotate(search=vector).filter(search=q)
+        materials2=Material.objects.annotate(similarity=vector_trgm).filter(similarity__gt=0.2)
+        materials=materials|materials2
+    #    materials=Material.objects.filter(name__search=dat['word'])
+        material_serializer = MaterialSerializerList(materials, many=True)
+        return JsonResponse(material_serializer.data, safe=False)
+
+
+@api_view(['POST'])
+def change(request):
+    if request.method == 'POST':
+        words = JSONParser().parse(request)
+        for word in words:
+            pk=word[0]
+            s=words.get(word[0])
+            dict = Dictionary.objects.get(pk=pk)
+
+            if (s=='0')|(s=='-1'):
+                if (dict.state > 0):
+                    dict.state -= 1
+            elif (s=='1'):
+                if (dict.state < 2):
+                    dict.state += 1
+            dict.save()
+    return JsonResponse({'message': 'Words were updated successfully!'},
+                        status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def change_inverted(request):
+    if request.method == 'POST':
+        words = JSONParser().parse(request)
+        for word in words:
+            pk=word[0]
+            s=words.get(word[0])
+            dict = DictionaryInverted.objects.get(pk=pk)
+
+            if (s=='0')|(s=='-1'):
+                if (dict.state > 0):
+                    dict.state -= 1
+            elif (s=='1'):
+                if (dict.state < 2):
+                    dict.state += 1
+            dict.save()
+    return JsonResponse({'message': 'Words were updated successfully!'},
+                        status=status.HTTP_200_OK)
+
+
+
+
+#git add -A
+#git commit -m 'Update ALLOWED_HOSTS with site and development server URL'
+#git push origin main
+#git push heroku main
+
+
+
+
 # изменение статуса слова DictionaryInverted
+
+'''
+
+
+
+
+
+
 @api_view(['GET'])
 def dict_increment_inverted(request, pk):
     try:
@@ -297,25 +346,32 @@ def dict_decrement_inverted(request, pk):
     if request.method == 'GET':
         dictionary_serializer = DictionaryInvertedSerializer(dict)
         return JsonResponse(dictionary_serializer.data)
-
+        
+        @api_view(['GET'])
+def dict_increment(request, pk):
+    try:
+        dict = Dictionary.objects.get(pk=pk)
+    except Dictionary.DoesNotExist:
+        return JsonResponse({'message': 'The word does not exist'}, status=status.HTTP_404_NOT_FOUND)
+    if (dict.state<2):
+            dict.state+=1
+    dict.save()
+    if request.method == 'GET':
+        dictionary_serializer = DictionarySerializer(dict)
+        return JsonResponse(dictionary_serializer.data)
 
 
 @api_view(['GET'])
-def search(request):
+def dict_decrement(request, pk):
+    try:
+        dict = Dictionary.objects.get(pk=pk)
+    except Dictionary.DoesNotExist:
+        return JsonResponse({'message': 'The word does not exist'}, status=status.HTTP_404_NOT_FOUND)
+    if (dict.state > 0):
+        dict.state -= 1
+    dict.save()
     if request.method == 'GET':
-        dat = JSONParser().parse(request)
-        q=dat['word']
-    #    print(data['word'])
-        vector = SearchVector('name')
-        vector_trgm =  TrigramSimilarity('name',q)
-        materials = Material.objects.annotate(search=vector).filter(search=q)
-        materials2=Material.objects.annotate(similarity=vector_trgm).filter(similarity__gt=0.2)
-        materials=materials|materials2
-    #    materials=Material.objects.filter(name__search=dat['word'])
-        material_serializer = MaterialSerializerList(materials, many=True)
-        return JsonResponse(material_serializer.data, safe=False)
+        dictionary_serializer = DictionarySerializer(dict)
+        return JsonResponse(dictionary_serializer.data)
 
-#git add -A
-#git commit -m 'Update ALLOWED_HOSTS with site and development server URL'
-#git push origin main
-#git push heroku main
+        '''
