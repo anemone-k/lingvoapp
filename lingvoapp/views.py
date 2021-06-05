@@ -263,7 +263,11 @@ def search(request):
             materials = Material.objects.annotate(search=vector).filter(search=q)
             materials2=Material.objects.annotate(similarity=vector_trgm).filter(similarity__gt=0.2)
             materials=materials|materials2
-            material_serializer = MaterialSerializerList(materials, many=True)
+            if (materials!=None):
+                material_serializer = MaterialSerializerList(materials, many=True)
+            else:
+                material_serializer = MaterialSerializerList([], many=True)
+
 
         else:
             material_serializer= MaterialSerializerList([], many=True)
