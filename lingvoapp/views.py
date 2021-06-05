@@ -272,8 +272,11 @@ def search(request):
 def change(request):
     if request.method == 'POST':
         words = JSONParser().parse(request)
+        print(words)
         for word in words:
-            pk=word[0]
+            print(word[0])
+            pk=int(word[0])
+
             s=words.get(word[0])
             dict = Dictionary.objects.get(pk=pk)
 
