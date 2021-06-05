@@ -272,14 +272,10 @@ def search(request):
 def change(request):
     if request.method == 'POST':
         words = JSONParser().parse(request)
-        print(words)
         for word in words:
-            print(word[0])
-            pk=int(word[0])
-
-            s=words.get(word[0])
+            pk=int(word)
+            s=words.get(word)
             dict = Dictionary.objects.get(pk=pk)
-
             if (s=='0')|(s=='-1'):
                 if (dict.state > 0):
                     dict.state -= 1
@@ -296,10 +292,9 @@ def change_inverted(request):
     if request.method == 'POST':
         words = JSONParser().parse(request)
         for word in words:
-            pk=int(word[0])
-            s=words.get(word[0])
+            pk=int(word)
+            s=words.get(word)
             dict = DictionaryInverted.objects.get(pk=pk)
-
             if (s=='0')|(s=='-1'):
                 if (dict.state > 0):
                     dict.state -= 1
