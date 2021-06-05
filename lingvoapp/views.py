@@ -257,7 +257,7 @@ class WordTranslation(APIView):
 def search(request):
     if request.method == 'GET':
         q=request.GET.get('word')
-        if (q!=''):
+        if (q!=None):
             vector = SearchVector('name')
             vector_trgm =  TrigramSimilarity('name',q)
             materials = Material.objects.annotate(search=vector).filter(search=q)
