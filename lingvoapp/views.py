@@ -241,13 +241,13 @@ class WordTranslation(APIView):
             r = random.randint(0, 3)
             for i in range(4):
                 if (r == i):
-                    rightAnswer = AnswerOptions(question=question, answerText=d.word, wordId=d.pk, isCorrect=True)
+                    rightAnswer = AnswerOptions(question=question, answerText=d.translation, wordId=d.pk, isCorrect=True)
                     rightAnswer.save()
                 else:
                     d1 = DictionaryInverted.objects.all().order_by('?').first()
                     while (d1.id == d.id):
                         d1 = DictionaryInverted.objects.all().order_by('?').first()
-                    wrongAnswer = AnswerOptions(question=question, answerText=d1.word, wordId=d1.pk, isCorrect=False)
+                    wrongAnswer = AnswerOptions(question=question, answerText=d1.translation, wordId=d1.pk, isCorrect=False)
                     wrongAnswer.save()
 
         question = Question.objects.all()
